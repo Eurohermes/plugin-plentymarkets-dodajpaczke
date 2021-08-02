@@ -1,0 +1,31 @@
+{
+    "name": "DodajPaczke",
+    "marketplaceName": [
+        {
+            "en": "DodajPaczke",
+            "de": "DodajPaczke"
+        }
+    ],
+    "description": "A basic shipping plugin by plentymarkets",
+    "namespace": "DodajPaczke",
+    "author": "plentymarkets GmbH",
+    "type": "shipping",
+    "isClosedSource": "False",
+    "serviceProvider": "DodajPaczke\\Providers\\DodajPaczkeServiceProvider",
+    "version": "1.0.1",
+    "license": "AGPL-3.0",
+    "pluginIcon": "icon_plugin_xs.png",
+    "price": 0,
+    "shortDescription": {
+        "en": "A basic shipping plugin",
+        "de": "Ein einfaches Versand-Plugin"
+    },
+    "keywords": [
+        "plugin",
+        "shipping",
+        "tutorial"
+    ],
+    "authorIcon": "icon_author_xs.png",
+    "email": "sales@plentymarkets.com",
+    "phone": "+49 561 98 681 100"
+}
