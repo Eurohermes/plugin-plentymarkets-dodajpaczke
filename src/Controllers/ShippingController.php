@@ -729,7 +729,8 @@ class ShippingController extends Controller
                 'originCountryISOCode' => $address->country->isoCode2
             ],
             'identityCommunication' => [
-                'phone' => strlen($address->phone) > 0 ? $address->phone : $address->personalNumber,
+                'phone' => strlen($address->phone) ? $address->phone : '',
+                'mobile' => strlen($address->personalNumber) ? $address->personalNumber : '',
                 'email' => $address->email,
                 'contactPerson' => $address->contactPerson
             ]
