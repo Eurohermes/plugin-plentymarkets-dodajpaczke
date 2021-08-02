@@ -16,8 +16,8 @@
     "license": "AGPL-3.0",
     "price": 0,
     "shortDescription": {
-        "en": "A basic shipping plugin",
-        "de": "Ein einfaches Versand-Plugin"
+        "en": "Dodajpaczke shipping plugin.",
+        "de": "Dodajpaczke Versand-Plugin"
     },
     "keywords": [
         "plugin",
