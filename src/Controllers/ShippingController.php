@@ -134,12 +134,14 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
-            foreach ($this->orderShippingPackage->listOrderShippingPackages($order->id) as $package) {
+            $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
+            $shipmentItems = [];
+            foreach ($packages as $package) {
                 /* @var $package OrderShippingPackage */
                 $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
                 $requestHandler = $this->handleCreateRequest($requestData);
                 if ($requestHandler['success']) {
-                    $shipmentItems = $this->handleAfterRegisterShipment(
+                    $shipmentItems[] = $this->handleAfterRegisterShipment(
                         $requestHandler['labelUrl'] ?? '',
                         $requestHandler['shipmentNumber'] ?? '',
                         (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
@@ -180,33 +182,35 @@ class ShippingController extends Controller
             );
             if (isset($shippingInformation->additionalData) && is_array($shippingInformation->additionalData)) {
                 $success = true;
-                if (isset($shippingInformation->additionalData['dodajpaczkeShipmentId'])) {
-                    $dodajpaczkeShipmentId = $shippingInformation->additionalData['dodajpaczkeShipmentId'];
-                    $requestHandler = $this->handleCancelRequest($dodajpaczkeShipmentId);
-                    if ($requestHandler['success']) {
-                        $this->createOrderResult[$orderId] = $this->buildResultArray(
-                            true,
-                            $this->getStatusMessage($requestHandler)
-                        );
+                foreach ($shippingInformation->additionalData as $additionalData) {
+                    if (isset($additionalData['dodajpaczkeShipmentId'])) {
+                        $dodajpaczkeShipmentId = $additionalData['dodajpaczkeShipmentId'];
+                        $requestHandler = $this->handleCancelRequest($dodajpaczkeShipmentId);
+                        if ($requestHandler['success']) {
+                            $this->createOrderResult[$orderId] = $this->buildResultArray(
+                                true,
+                                $this->getStatusMessage($requestHandler)
+                            );
+                        } else {
+                            $this->createOrderResult[$orderId] = $this->buildResultArray(
+                                false,
+                                $this->getStatusMessage($requestHandler)
+                            );
+                            $success = false;
+                        }
                     } else {
+                        $status = [
+                            'status' => 'Could not find selected Dodajpaczke shipment item in your system.' .
+                                ' You have to cancel it manually.'
+                        ];
                         $this->createOrderResult[$orderId] = $this->buildResultArray(
                             false,
-                            $this->getStatusMessage($requestHandler)
+                            $this->getStatusMessage($status)
                         );
-                        $success = false;
                     }
-                } else {
-                    $status = [
-                        'status' => 'Could not find selected Dodajpaczke shipment item in your system.' .
-                            ' You have to cancel it manually.'
-                    ];
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        false,
-                        $this->getStatusMessage($status)
-                    );
-                }
-                if ($success) {
-                    $this->shippingInformationRepositoryContract->resetShippingInformation($orderId);
+                    if ($success) {
+                        $this->shippingInformationRepositoryContract->resetShippingInformation($orderId);
+                    }
                 }
             }
         }
@@ -224,9 +228,11 @@ class ShippingController extends Controller
         if (is_null($output)) {
             $this->storageRepository->uploadObject('DodajPaczke', $key, '');
         }
+        // Convert Base64URL to Base64.
+        $output = str_replace(['-', '_'], ['+', '/'], $output);
         $output = base64_decode($output);
 
-        return $this->storageRepository->uploadObject('DodajPaczke', $key, $output, true);
+        return $this->storageRepository->uploadObject('DodajPaczke', $key, $output);
     }
 
     /**
@@ -407,25 +413,26 @@ class ShippingController extends Controller
         string $labelUrl,
         string $shipmentNumber,
         int $dodajpaczkeShipmentId,
-        string $sequenceNumber
+        int $packageId
     ): array {
         $storageObject = $this->saveLabelToS3(
             $labelUrl,
             $shipmentNumber . '.pdf'
         );
+        $shipmentItems = $this->buildShipmentItems(
+            $labelUrl,
+            $shipmentNumber,
+            $dodajpaczkeShipmentId
+        );
         $this->orderShippingPackage->updateOrderShippingPackage(
-            $sequenceNumber,
+            $packageId,
             $this->buildPackageInfo(
                 $shipmentNumber,
                 $storageObject->key
             )
         );
 
-        return $this->buildShipmentItems(
-            $labelUrl,
-            $shipmentNumber,
-            $dodajpaczkeShipmentId
-        );
+        return $shipmentItems;
     }
 
     /* Eurohermes service */
