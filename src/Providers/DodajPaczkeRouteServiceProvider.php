@@ -16,6 +16,6 @@ class DodajPaczkeRouteServiceProvider extends RouteServiceProvider
      */
     public function map(Router $router)
     {
-        $router->get('hello-world','DodajPaczke\Controllers\DodajPaczkeController@getHelloWorldPage');
+        $router->get('dodajpaczke','DodajPaczke\Controllers\DodajPaczkeController@index');
     }
 }

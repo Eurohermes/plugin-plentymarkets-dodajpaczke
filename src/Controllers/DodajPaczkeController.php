@@ -11,7 +11,7 @@ class DodajPaczkeController extends Controller
      * @param Twig $twig
      * @return string
      */
-    public function getHelloWorldPage(Twig $twig):string
+    public function index(Twig $twig):string
     {
         return $twig->render('DodajPaczke::Index');
     }
