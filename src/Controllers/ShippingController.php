@@ -347,11 +347,11 @@ class ShippingController extends Controller
     /**
      * Returns package info
      */
-    private function buildPackageInfo(string $packageNumber, string $labelUrl): array
+    private function buildPackageInfo(string $packageNumber, string $labelPath): array
     {
         return [
             'packageNumber' => $packageNumber,
-            'label' => $labelUrl,
+            'label' => $labelPath,
         ];
     }
 
