@@ -241,12 +241,13 @@ class ShippingController extends Controller
                 }
 
                 $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['labelKey' => $labelKey]);
+                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['exists' => $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)]);
                 if (
                     !is_null($labelKey) &&
                     $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
                 ) {
                     $storageObject = $this->storageRepository->getObject('DodajPaczke', $labelKey);
-                    $this->getLogger(__METHOD__)->info("DodajPaczke::logging.labelFound", $storageObject);
+                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", $storageObject);
 
                     $labels[] = $storageObject->body;
                 }
