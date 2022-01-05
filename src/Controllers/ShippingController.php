@@ -223,6 +223,7 @@ class ShippingController extends Controller
 
     public function getLabels(Request $request, $orderIds): array
     {
+        $this->getLogger(__FUNCTION__)->error("DodajPaczke::logging.exception", ['info' => 'gettin labels begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         $labels = [];
 
