@@ -130,7 +130,7 @@ class ShippingController extends Controller
      */
     public function registerShipments(Request $request, array $orderIds): array
     {
-        $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.exception", ['info' => 'registration begin']);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['info' => 'registration begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         $orderIds = $this->getOpenOrderIds($orderIds);
         $shipmentDate = date('Y-m-d');
@@ -235,7 +235,7 @@ class ShippingController extends Controller
                     $res = $this->orderShippingPackage->getOrderShippingPackage($result->id);
                     $labelKey = $res->packageNumber;
                 } catch (Exception $e) {
-                    $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.exception", $e);
+                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $e);
                 }
 
                 if (
@@ -243,7 +243,7 @@ class ShippingController extends Controller
                     $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
                 ) {
                     $storageObject = $this->storageRepository->getObject('DodajPaczke', $labelKey);
-                    $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.labelFound", $storageObject);
+                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", $storageObject);
 
                     $labels[] = $storageObject->body;
                 }
@@ -264,7 +264,9 @@ class ShippingController extends Controller
             $this->storageRepository->uploadObject('DodajPaczke', $key, '');
         }
         // Convert Base64URL to Base64.
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", ['base64url' => $output]);
         $output = str_replace(['-', '_'], ['+', '/'], $output);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", ['base64' => $output]);
         $output = base64_decode($output);
 
         return $this->storageRepository->uploadObject('DodajPaczke', $key, $output);
