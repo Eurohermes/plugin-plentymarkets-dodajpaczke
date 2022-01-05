@@ -245,7 +245,7 @@ class ShippingController extends Controller
                     !is_null($labelKey) &&
                     $this->storageRepository->doesObjectExist("DodajPaczke", "$labelKey.pdf")
                 ) {
-                    $storageObject = $this->storageRepository->getObject('DodajPaczke', $labelKey);
+                    $storageObject = $this->storageRepository->getObject('DodajPaczke', "$labelKey.pdf");
                     $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", $storageObject);
 
                     $labels[] = $storageObject->body;
