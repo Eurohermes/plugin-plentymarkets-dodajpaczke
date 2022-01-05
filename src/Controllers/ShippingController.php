@@ -3,6 +3,7 @@
 namespace DodajPaczke\Controllers;
 
 use DateTime;
+use Exception;
 use Plenty\Plugin\Controller;
 use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Http\Request;
@@ -216,6 +217,39 @@ class ShippingController extends Controller
         }
 
         return $this->createOrderResult;
+    }
+
+    public function getLabels(Request $request, $orderIds): array
+    {
+        $orderIds = $this->getOrderIds($request, $orderIds);
+        $labels = [];
+
+        foreach ($orderIds as $orderId) {
+            $results = $this->orderShippingPackage->listOrderShippingPackages($orderId);
+
+            foreach ($results as $result) {
+                $labelKey = null;
+
+                try {
+                    $res = $this->orderShippingPackage->getOrderShippingPackage($result->id);
+                    $labelKey = $res->packageNumber;
+                } catch (Exception $e) {
+                    $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.exception", $e);
+                }
+
+                if (
+                    !is_null($labelKey) &&
+                    $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
+                ) {
+                    $storageObject = $this->storageRepository->getObject('DodajPaczke', $labelKey);
+                    $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.labelFound", $storageObject);
+
+                    $labels[] = $storageObject->body;
+                }
+            }
+        }
+
+        return $labels;
     }
 
 

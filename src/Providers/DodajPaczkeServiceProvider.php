@@ -28,6 +28,7 @@ class DodajPaczkeServiceProvider extends ServiceProvider
             [
                 'DodajPaczke\\Controllers\\ShippingController@registerShipments',
                 'DodajPaczke\\Controllers\\ShippingController@deleteShipments',
+                'DodajPaczke\\Controllers\\ShippingController@getLabels'
             ]);
     }
 }
