@@ -177,6 +177,7 @@ class ShippingController extends Controller
      */
     public function deleteShipments(Request $request, $orderIds)
     {
+        $this->getLogger(__FUNCTION__)->error("DodajPaczke::logging.exception", ['info' => 'registration begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         foreach ($orderIds as $orderId) {
             $shippingInformation = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId(
