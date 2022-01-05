@@ -130,6 +130,7 @@ class ShippingController extends Controller
      */
     public function registerShipments(Request $request, array $orderIds): array
     {
+        $this->getLogger(__FUNCTION__)->info("DodajPaczke::logging.exception", ['info' => 'registration begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         $orderIds = $this->getOpenOrderIds($orderIds);
         $shipmentDate = date('Y-m-d');
