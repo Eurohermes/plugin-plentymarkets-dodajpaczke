@@ -130,7 +130,6 @@ class ShippingController extends Controller
      */
     public function registerShipments(Request $request, array $orderIds): array
     {
-        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['info' => 'registration begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         $orderIds = $this->getOpenOrderIds($orderIds);
         $shipmentDate = date('Y-m-d');
@@ -177,7 +176,6 @@ class ShippingController extends Controller
      */
     public function deleteShipments(Request $request, $orderIds)
     {
-        $this->getLogger(__FUNCTION__)->error("DodajPaczke::logging.exception", ['info' => 'registration begin']);
         $orderIds = $this->getOrderIds($request, $orderIds);
         foreach ($orderIds as $orderId) {
             $shippingInformation = $this->shippingInformationRepositoryContract->getShippingInformationByOrderId(
@@ -221,9 +219,10 @@ class ShippingController extends Controller
         return $this->createOrderResult;
     }
 
-    public function getLabels(Request $request, $orderIds): array
+    public function getLabels(Request $request, $orderIds)
     {
-        $this->getLogger(__FUNCTION__)->error("DodajPaczke::logging.exception", ['info' => 'gettin labels begin']);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['info' => 'get labels hit']);
+
         $orderIds = $this->getOrderIds($request, $orderIds);
         $labels = [];
 
@@ -245,7 +244,7 @@ class ShippingController extends Controller
                     $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
                 ) {
                     $storageObject = $this->storageRepository->getObject('DodajPaczke', $labelKey);
-                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", $storageObject);
+                    $this->getLogger(__METHOD__)->info("DodajPaczke::logging.labelFound", $storageObject);
 
                     $labels[] = $storageObject->body;
                 }
@@ -266,9 +265,7 @@ class ShippingController extends Controller
             $this->storageRepository->uploadObject('DodajPaczke', $key, '');
         }
         // Convert Base64URL to Base64.
-        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", ['base64url' => $output]);
         $output = str_replace(['-', '_'], ['+', '/'], $output);
-        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.labelFound", ['base64' => $output]);
         $output = base64_decode($output);
 
         return $this->storageRepository->uploadObject('DodajPaczke', $key, $output);
