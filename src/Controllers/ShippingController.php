@@ -241,7 +241,7 @@ class ShippingController extends Controller
                 }
 
                 $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['labelKey' => $labelKey]);
-                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['exists' => $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)]);
+                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['exists' => $this->storageRepository->doesObjectExist("DodajPaczke", "$labelKey.pdf")]);
                 if (
                     !is_null($labelKey) &&
                     $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
