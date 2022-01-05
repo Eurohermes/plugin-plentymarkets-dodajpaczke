@@ -224,11 +224,12 @@ class ShippingController extends Controller
         $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['info' => 'get labels hit']);
 
         $orderIds = $this->getOrderIds($request, $orderIds);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['orders' => $orderIds]);
         $labels = [];
 
         foreach ($orderIds as $orderId) {
             $results = $this->orderShippingPackage->listOrderShippingPackages($orderId);
-
+            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['results' => $results]);
             foreach ($results as $result) {
                 $labelKey = null;
 
@@ -239,6 +240,7 @@ class ShippingController extends Controller
                     $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $e);
                 }
 
+                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['labelKey' => $labelKey]);
                 if (
                     !is_null($labelKey) &&
                     $this->storageRepository->doesObjectExist("DodajPaczke", $labelKey)
