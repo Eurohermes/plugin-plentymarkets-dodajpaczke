@@ -17,6 +17,7 @@ use Plenty\Modules\Plugin\Storage\Contracts\StorageRepositoryContract;
 use Plenty\Modules\Account\Address\Contracts\AddressRepositoryContract;
 use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
 use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
+use Plenty\Modules\Listing\ShippingProfile\Contracts\ShippingProfileRepositoryContract;
 use Plenty\Modules\Order\Shipping\Package\Contracts\OrderShippingPackageRepositoryContract;
 use Plenty\Modules\Order\Shipping\Information\Contracts\ShippingInformationRepositoryContract;
 use Plenty\Modules\Order\Shipping\PackageType\Contracts\ShippingPackageTypeRepositoryContract;
