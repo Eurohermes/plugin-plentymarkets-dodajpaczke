@@ -144,6 +144,7 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
+            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", ['shippingProfileId' => $order->shippingProfileId]);
             $shippingProfile = $this->shippingProfileRepositoryContract->get($order->shippingProfileId);
             $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
 
