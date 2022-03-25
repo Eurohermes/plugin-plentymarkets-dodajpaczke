@@ -54,9 +54,9 @@ class ShippingController extends Controller
     private $shippingInformationRepositoryContract;
 
     /**
-     * @var OrderShippingProfilesRepositoryContract
+     * @var ShippingProfileRepositoryContract
      */
-    private $orderShippingProfilesRepositoryContract;
+    private $shippingProfileRepositoryContract;
 
     /**
      * @var StorageRepositoryContract $storageRepository
@@ -95,7 +95,7 @@ class ShippingController extends Controller
      * @param StorageRepositoryContract $storageRepository
      * @param ShippingInformationRepositoryContract $shippingInformationRepositoryContract
      * @param ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract
-     * @param OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract
+     * @param ShippingProfileRepositoryContract $shippingProfileRepositoryContract
      * @param ConfigRepository $config
      */
     public function __construct(
@@ -106,7 +106,7 @@ class ShippingController extends Controller
         StorageRepositoryContract $storageRepository,
         ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
         ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract,
-        OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract,
+        ShippingProfileRepositoryContract $shippingProfileRepositoryContract,
         ConfigRepository $config
     ) {
         $this->request = $request;
@@ -142,7 +142,7 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
-            $shippingProfile = $this->orderShippingProfilesRepositoryContract->getCombinations($order->shippingProfileId);
+            $shippingProfile = $this->shippingProfileRepositoryContract->get($order->shippingProfileId);
             $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
 
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
