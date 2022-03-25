@@ -740,7 +740,7 @@ class ShippingController extends Controller
         if ($order->methodOfPaymentId == 1) {
             return [
                 'shipperId' => $this->ehApiShipperId,
-                'provider' => ['id' => 0],
+                'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
                 'receiver' => $receiver,
                 'item' => $item,
                 'description' => 'Shipment of goods.',
