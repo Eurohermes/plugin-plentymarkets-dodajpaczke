@@ -145,7 +145,7 @@ class ShippingController extends Controller
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
             $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", ['shippingProfileId' => $order->shippingProfileId]);
-            $shippingProfile = $this->shippingProfileRepositoryContract->get($order->shippingProfileId);
+            $shippingProfile = $this->shippingProfileRepositoryContract->get(7);
             $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
 
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
