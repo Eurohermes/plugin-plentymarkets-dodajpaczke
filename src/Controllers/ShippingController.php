@@ -54,6 +54,11 @@ class ShippingController extends Controller
     private $shippingInformationRepositoryContract;
 
     /**
+     * @var OrderShippingProfilesRepositoryContract
+     */
+    private $orderShippingProfilesRepositoryContract;
+
+    /**
      * @var StorageRepositoryContract $storageRepository
      */
     private $storageRepository;
@@ -90,6 +95,7 @@ class ShippingController extends Controller
      * @param StorageRepositoryContract $storageRepository
      * @param ShippingInformationRepositoryContract $shippingInformationRepositoryContract
      * @param ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract
+     * @param OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract
      * @param ConfigRepository $config
      */
     public function __construct(
@@ -100,6 +106,7 @@ class ShippingController extends Controller
         StorageRepositoryContract $storageRepository,
         ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
         ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract,
+        OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract,
         ConfigRepository $config
     ) {
         $this->request = $request;
@@ -118,7 +125,7 @@ class ShippingController extends Controller
         $this->ehApiLogin = $config->get('DodajPaczke.global.ehApiLogin');
         $this->ehApiPassword = $config->get('DodajPaczke.global.ehApiPassword');
         $this->ehApiShipperId = $config->get('DodajPaczke.global.ehApiShipperId');
-        $this->ehApiProviderId = $config->get('DodajPaczke.global.ehApiProviderId');
+//        $this->ehApiProviderId = $config->get('DodajPaczke.global.ehApiProviderId');
     }
 
     /**
@@ -135,10 +142,14 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
+            $shippingProfile = $this->orderShippingProfilesRepositoryContract->getCombinations($order->shippingProfileId);
+            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
+
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
             foreach ($packages as $package) {
                 /* @var $package OrderShippingPackage */
+
                 $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
                 $requestHandler = $this->handleCreateRequest($requestData);
                 if ($requestHandler['success']) {
