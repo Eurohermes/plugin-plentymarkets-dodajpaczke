@@ -138,30 +138,38 @@ class ShippingController extends Controller
             $order = $this->orderRepository->findOrderById($orderId);
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
-            foreach ($packages as $package) {
-                /* @var $package OrderShippingPackage */
-                $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
-                $requestHandler = $this->handleCreateRequest($requestData);
-                if ($requestHandler['success']) {
-                    $shipmentItems[] = $this->handleAfterRegisterShipment(
-                        $requestHandler['labelUrl'] ?? '',
-                        $requestHandler['shipmentNumber'] ?? '',
-                        (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
-                        $package->id
-                    );
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        true,
-                        $this->getStatusMessage($requestHandler),
-                        false,
-                        $shipmentItems
-                    );
-                    $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
-                } else {
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        false,
-                        $this->getStatusMessage($requestHandler)
-                    );
+            if ($this->getProviderId($order->shippingProfileId) !== null) {
+                foreach ($packages as $package) {
+                    /* @var $package OrderShippingPackage */
+                    $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
+                    $requestHandler = $this->handleCreateRequest($requestData);
+                    if ($requestHandler['success']) {
+                        $shipmentItems[] = $this->handleAfterRegisterShipment(
+                            $requestHandler['labelUrl'] ?? '',
+                            $requestHandler['shipmentNumber'] ?? '',
+                            (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
+                            $package->id
+                        );
+                        $this->createOrderResult[$orderId] = $this->buildResultArray(
+                            true,
+                            $this->getStatusMessage($requestHandler),
+                            false,
+                            $shipmentItems
+                        );
+                        $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
+                    } else {
+                        $this->createOrderResult[$orderId] = $this->buildResultArray(
+                            false,
+                            $this->getStatusMessage($requestHandler)
+                        );
+                    }
                 }
+            } else {
+                $this->createOrderResult[$orderId] = $this->buildResultArray(
+                    false,
+                    "We could not find courier associated with order shipping profile ID" .
+                    "($order->shippingProfileId). Please check plugin's Shipping profiles configuration."
+                );
             }
         }
 
