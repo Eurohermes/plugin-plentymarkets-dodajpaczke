@@ -420,7 +420,7 @@ class ShippingController extends Controller
 
     private function getPackageItemDetails(OrderShippingPackage $package): array
     {
-        list($length, $width, $height) = $this->getPackageDimensions((int) $package->packageId);
+        [$length, $width, $height] = $this->getPackageDimensions((int) $package->packageId);
 
         return [
             'weightInKg' => $package->weight / 1000, // [mr] $package->weight - docs. The weight of the package in grams
@@ -788,7 +788,11 @@ class ShippingController extends Controller
         ];
     }
 
-    private function getProviderId(int $shippingProfileId): ?int
+    /**
+     * @param int $shippingProfileId
+     * @return int|null
+     */
+    private function getProviderId(int $shippingProfileId)
     {
         $map = $this->providerProfileMap;
         foreach ($map as $providerId => $profileId) {
