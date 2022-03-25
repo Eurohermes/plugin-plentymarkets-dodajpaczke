@@ -139,10 +139,9 @@ class ShippingController extends Controller
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
             if ($this->getProviderId($order->shippingProfileId) !== null) {
-                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider' => $this->getProviderId($order->shippingProfileId)]);
-
                 foreach ($packages as $package) {
                     /* @var $package OrderShippingPackage */
+                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider1' => $this->getProviderId($order->shippingProfileId)]);
                     $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
                     $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $requestData);
                     $requestHandler = $this->handleCreateRequest($requestData);
@@ -741,6 +740,8 @@ class ShippingController extends Controller
         /* @var $deliveryAddress Address */
         $deliveryAddress = $order->deliveryAddress;
         $receiver = $this->createReceiverData($deliveryAddress);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider2' => $this->getProviderId($order->shippingProfileId)]);
+
         /* [mr] COD by default is 1 or '1'. */
         if ($order->methodOfPaymentId == 1) {
             return [
