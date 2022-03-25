@@ -795,7 +795,7 @@ class ShippingController extends Controller
     {
         $map = $this->providerProfileMap;
         foreach ($map as $providerId => $profileId) {
-            if ($profileId === $shippingProfileId) {
+            if ((int) $profileId === $shippingProfileId) {
                 return (int)$providerId;
             }
         }
