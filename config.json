@@ -28,128 +28,134 @@
           "label": "Config.ehApiShipperId",
           "required": true
         },
-        "global.ehApiProviderProfileMap": {
+      }
+    },
+    "profiles": {
+      "label": "Config.profiles",
+      "fullWidth": true,
+      "formFields": {
+        "profiles.ehApiProviderProfileMap": {
           "type": "verticalContainer",
           "label": "Config.providerProfileMap",
           "options": {
             "containerEntries": {
-              "global.providers.1": {
+              "profiles.ehApiProviderProfileMap.1": {
                 "type": "inputNumber",
                 "label": "Config.dhl"
               },
-              "global.providers.2": {
+              "profiles.ehApiProviderProfileMap.2": {
                 "type": "inputNumber",
                 "label": "Config.rm24t"
               },
-              "global.providers.3": {
+              "profiles.ehApiProviderProfileMap.3": {
                 "type": "inputNumber",
                 "label": "Config.rm48tns"
               },
-              "global.providers.4": {
+              "profiles.ehApiProviderProfileMap.4": {
                 "type": "inputNumber",
                 "label": "Config.rm24"
               },
-              "global.providers.5": {
+              "profiles.ehApiProviderProfileMap.5": {
                 "type": "inputNumber",
                 "label": "Config.rm48"
               },
-              "global.providers.6": {
+              "profiles.ehApiProviderProfileMap.6": {
                 "type": "inputNumber",
                 "label": "Config.b2ce"
               },
-              "global.providers.7": {
+              "profiles.ehApiProviderProfileMap.7": {
                 "type": "inputNumber",
                 "label": "Config.colissimo"
               },
-              "global.providers.8": {
+              "profiles.ehApiProviderProfileMap.8": {
                 "type": "inputNumber",
                 "label": "Config.colissimoS"
               },
-              "global.providers.9": {
+              "profiles.ehApiProviderProfileMap.9": {
                 "type": "inputNumber",
                 "label": "Config.colissimoCP"
               },
-              "global.providers.11": {
+              "profiles.ehApiProviderProfileMap.11": {
                 "type": "inputNumber",
                 "label": "Config.b2cfml"
               },
-              "global.providers.12": {
+              "profiles.ehApiProviderProfileMap.12": {
                 "type": "inputNumber",
                 "label": "Config.packetaHome"
               },
-              "global.providers.13": {
+              "profiles.ehApiProviderProfileMap.13": {
                 "type": "inputNumber",
                 "label": "Config.packetaPudo"
               },
-              "global.providers.14": {
+              "profiles.ehApiProviderProfileMap.14": {
                 "type": "inputNumber",
                 "label": "Config.glspl"
               },
-              "global.providers.15": {
+              "profiles.ehApiProviderProfileMap.15": {
                 "type": "inputNumber",
                 "label": "Config.glsde"
               },
-              "global.providers.16": {
+              "profiles.ehApiProviderProfileMap.16": {
                 "type": "inputNumber",
                 "label": "Config.rm48ts"
               },
-              "global.providers.17": {
+              "profiles.ehApiProviderProfileMap.17": {
                 "type": "inputNumber",
                 "label": "Config.upsStandard"
               },
-              "global.providers.18": {
+              "profiles.ehApiProviderProfileMap.18": {
                 "type": "inputNumber",
                 "label": "Config.dpdClassic"
               },
-              "global.providers.19": {
+              "profiles.ehApiProviderProfileMap.19": {
                 "type": "inputNumber",
                 "label": "Config.dhlStandard"
               },
-              "global.providers.20": {
+              "profiles.ehApiProviderProfileMap.20": {
                 "type": "inputNumber",
                 "label": "Config.rm24u_v2"
               },
-              "global.providers.21": {
+              "profiles.ehApiProviderProfileMap.21": {
                 "type": "inputNumber",
                 "label": "Config.rm24tns_v2"
               },
-              "global.providers.22": {
+              "profiles.ehApiProviderProfileMap.22": {
                 "type": "inputNumber",
                 "label": "Config.rm48u_v2"
               },
-              "global.providers.23": {
+              "profiles.ehApiProviderProfileMap.23": {
                 "type": "inputNumber",
                 "label": "Config.rm48tsn_v2"
               },
-              "global.providers.24": {
+              "profiles.ehApiProviderProfileMap.24": {
                 "type": "inputNumber",
                 "label": "Config.rm48ts_v2"
               },
-              "global.providers.25": {
+              "profiles.ehApiProviderProfileMap.25": {
                 "type": "inputNumber",
                 "label": "Config.dp"
               },
-              "global.providers.26": {
+              "profiles.ehApiProviderProfileMap.26": {
                 "type": "inputNumber",
                 "label": "Config.rm24ts_v2"
               },
-              "global.providers.27": {
+              "profiles.ehApiProviderProfileMap.27": {
                 "type": "inputNumber",
                 "label": "Config.dhl_v2"
               },
-              "global.providers.28": {
+              "profiles.ehApiProviderProfileMap.28": {
                 "type": "inputNumber",
                 "label": "Config.fedexT"
               },
-              "global.providers.29": {
+              "profiles.ehApiProviderProfileMap.29": {
                 "type": "inputNumber",
                 "label": "Config.fedexP"
               },
-              "global.providers.30": {
+              "profiles.ehApiProviderProfileMap.30": {
                 "type": "inputNumber",
                 "label": "Config.fedexU"
               },
-              "global.providers.31": {
+              "profiles.ehApiProviderProfileMap.31": {
                 "type": "inputNumber",
                 "label": "Config.fedexE"
               }
