@@ -136,19 +136,10 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
-            $this->getLogger(__METHOD__)->error(
-                "DodajPaczke::logging.warning",
-                [
-                    'profileId' => $order->shippingProfileId,
-                    'map' => $this->providerProfileMap
-                ]
-            );
-
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
             foreach ($packages as $package) {
                 /* @var $package OrderShippingPackage */
-
                 $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
                 $requestHandler = $this->handleCreateRequest($requestData);
                 if ($requestHandler['success']) {
@@ -786,5 +777,21 @@ class ShippingController extends Controller
                 'contactPerson' => $address->contactPerson
             ]
         ];
+    }
+
+    /**
+     * @param int $shippingProfileId
+     * @return int|null
+     */
+    private function getProviderId(int $shippingProfileId)
+    {
+        $map = $this->providerProfileMap;
+        foreach ($map as $providerId => $profileId) {
+            if ($profileId === $shippingProfileId) {
+                return (int)$providerId;
+            }
+        }
+
+        return null;
     }
 }
