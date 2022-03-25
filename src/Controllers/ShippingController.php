@@ -139,6 +139,8 @@ class ShippingController extends Controller
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
             if ($this->getProviderId($order->shippingProfileId) !== null) {
+                $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider' => $this->getProviderId($order->shippingProfileId)]);
+
                 foreach ($packages as $package) {
                     /* @var $package OrderShippingPackage */
                     $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
@@ -797,6 +799,11 @@ class ShippingController extends Controller
     private function getProviderId(int $shippingProfileId)
     {
         $map = $this->providerProfileMap;
+        $this->getLogger(__METHOD__)->error(
+            "DodajPaczke::logging.exception",
+            ['map' => $map, 'shippingProfileId' => $shippingProfileId]
+        );
+
         foreach ($map as $providerId => $profileId) {
             if ((int) $profileId === $shippingProfileId) {
                 return (int)$providerId;
