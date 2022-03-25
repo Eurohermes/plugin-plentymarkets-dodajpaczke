@@ -19,6 +19,7 @@ use Plenty\Modules\Order\Shipping\ParcelService\Models\ParcelServicePreset;
 use Plenty\Modules\Order\Shipping\Contracts\ParcelServicePresetRepositoryContract;
 use Plenty\Modules\Listing\ShippingProfile\Contracts\ShippingProfileRepositoryContract;
 use Plenty\Modules\Order\Shipping\Package\Contracts\OrderShippingPackageRepositoryContract;
+use Plenty\Modules\Order\ShippingProfiles\Contracts\OrderShippingProfilesRepositoryContract;
 use Plenty\Modules\Order\Shipping\Information\Contracts\ShippingInformationRepositoryContract;
 use Plenty\Modules\Order\Shipping\PackageType\Contracts\ShippingPackageTypeRepositoryContract;
 
@@ -55,11 +56,6 @@ class ShippingController extends Controller
     private $shippingInformationRepositoryContract;
 
     /**
-     * @var ShippingProfileRepositoryContract
-     */
-    private $shippingProfileRepositoryContract;
-
-    /**
      * @var StorageRepositoryContract $storageRepository
      */
     private $storageRepository;
@@ -73,6 +69,16 @@ class ShippingController extends Controller
      * @var  array
      */
     private $createOrderResult = [];
+
+    /**
+     * @var ShippingProfileRepositoryContract
+     */
+    private $shippingProfileRepositoryContract;
+
+    /**
+     * @var OrderShippingProfilesRepositoryContract
+     */
+    private $orderShippingProfilesRepositoryContract;
 
     /**
      * @var ConfigRepository
@@ -97,6 +103,7 @@ class ShippingController extends Controller
      * @param ShippingInformationRepositoryContract $shippingInformationRepositoryContract
      * @param ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract
      * @param ShippingProfileRepositoryContract $shippingProfileRepositoryContract
+     * @param OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract
      * @param ConfigRepository $config
      */
     public function __construct(
@@ -108,6 +115,7 @@ class ShippingController extends Controller
         ShippingInformationRepositoryContract $shippingInformationRepositoryContract,
         ShippingPackageTypeRepositoryContract $shippingPackageTypeRepositoryContract,
         ShippingProfileRepositoryContract $shippingProfileRepositoryContract,
+        OrderShippingProfilesRepositoryContract $orderShippingProfilesRepositoryContract,
         ConfigRepository $config
     ) {
         $this->request = $request;
@@ -119,6 +127,7 @@ class ShippingController extends Controller
         $this->shippingInformationRepositoryContract = $shippingInformationRepositoryContract;
         $this->shippingPackageTypeRepositoryContract = $shippingPackageTypeRepositoryContract;
         $this->shippingProfileRepositoryContract = $shippingProfileRepositoryContract;
+        $this->orderShippingProfilesRepositoryContract = $orderShippingProfilesRepositoryContract;
 
         $this->config = $config;
 
@@ -144,9 +153,12 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
-            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", ['shippingProfileId' => $order->shippingProfileId]);
-            $shippingProfile = $this->shippingProfileRepositoryContract->get(7);
-            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
+            $this->getLogger(__METHOD__)->error(
+                "DodajPaczke::logging.warning",
+                ['combinations' => $this->orderShippingProfilesRepositoryContract->getCombinations($orderId)]
+            );
+//            $shippingProfile = $this->shippingProfileRepositoryContract->get(7);
+//            $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $shippingProfile);
 
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
