@@ -136,40 +136,40 @@ class ShippingController extends Controller
         $shipmentDate = date('Y-m-d');
         foreach ($orderIds as $orderId) {
             $order = $this->orderRepository->findOrderById($orderId);
+            $this->getLogger(__METHOD__)->error(
+                "DodajPaczke::logging.warning",
+                [
+                    'profileId' => $order->shippingProfileId,
+                    'map' => $this->providerProfileMap
+                ]
+            );
+
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
             foreach ($packages as $package) {
                 /* @var $package OrderShippingPackage */
-                $providerId = $this->getProviderId($order->shippingProfileId);
-                if ($providerId === null) {
+
+                $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
+                $requestHandler = $this->handleCreateRequest($requestData);
+                if ($requestHandler['success']) {
+                    $shipmentItems[] = $this->handleAfterRegisterShipment(
+                        $requestHandler['labelUrl'] ?? '',
+                        $requestHandler['shipmentNumber'] ?? '',
+                        (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
+                        $package->id
+                    );
+                    $this->createOrderResult[$orderId] = $this->buildResultArray(
+                        true,
+                        $this->getStatusMessage($requestHandler),
+                        false,
+                        $shipmentItems
+                    );
+                    $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
+                } else {
                     $this->createOrderResult[$orderId] = $this->buildResultArray(
                         false,
-                        "We could not find courier associated with order shipping profile ID" .
-                        "($order->shippingProfileId). Please check plugin's Shipping profiles configuration."
+                        $this->getStatusMessage($requestHandler)
                     );
-                } else {
-                    $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
-                    $requestHandler = $this->handleCreateRequest($requestData);
-                    if ($requestHandler['success']) {
-                        $shipmentItems[] = $this->handleAfterRegisterShipment(
-                            $requestHandler['labelUrl'] ?? '',
-                            $requestHandler['shipmentNumber'] ?? '',
-                            (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
-                            $package->id
-                        );
-                        $this->createOrderResult[$orderId] = $this->buildResultArray(
-                            true,
-                            $this->getStatusMessage($requestHandler),
-                            false,
-                            $shipmentItems
-                        );
-                        $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
-                    } else {
-                        $this->createOrderResult[$orderId] = $this->buildResultArray(
-                            false,
-                            $this->getStatusMessage($requestHandler)
-                        );
-                    }
                 }
             }
         }
@@ -420,7 +420,7 @@ class ShippingController extends Controller
 
     private function getPackageItemDetails(OrderShippingPackage $package): array
     {
-        [$length, $width, $height] = $this->getPackageDimensions((int) $package->packageId);
+        list($length, $width, $height) = $this->getPackageDimensions((int) $package->packageId);
 
         return [
             'weightInKg' => $package->weight / 1000, // [mr] $package->weight - docs. The weight of the package in grams
@@ -741,7 +741,7 @@ class ShippingController extends Controller
         if ($order->methodOfPaymentId == 1) {
             return [
                 'shipperId' => $this->ehApiShipperId,
-                'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
+                'provider' => ['id' => 0],
                 'receiver' => $receiver,
                 'item' => $item,
                 'description' => 'Shipment of goods.',
@@ -786,21 +786,5 @@ class ShippingController extends Controller
                 'contactPerson' => $address->contactPerson
             ]
         ];
-    }
-
-    /**
-     * @param int $shippingProfileId
-     * @return int|null
-     */
-    private function getProviderId(int $shippingProfileId)
-    {
-        $map = $this->providerProfileMap;
-        foreach ($map as $providerId => $profileId) {
-            if ($profileId === $shippingProfileId) {
-                return (int)$providerId;
-            }
-        }
-
-        return null;
     }
 }
