@@ -141,9 +141,7 @@ class ShippingController extends Controller
             if ($this->getProviderId($order->shippingProfileId) !== null) {
                 foreach ($packages as $package) {
                     /* @var $package OrderShippingPackage */
-                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider1' => $this->getProviderId($order->shippingProfileId)]);
                     $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
-                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $requestData);
                     $requestHandler = $this->handleCreateRequest($requestData);
                     if ($requestHandler['success']) {
                         $shipmentItems[] = $this->handleAfterRegisterShipment(
@@ -740,7 +738,6 @@ class ShippingController extends Controller
         /* @var $deliveryAddress Address */
         $deliveryAddress = $order->deliveryAddress;
         $receiver = $this->createReceiverData($deliveryAddress);
-        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", ['provider2' => $this->getProviderId($order->shippingProfileId)]);
 
         /* [mr] COD by default is 1 or '1'. */
         if ($order->methodOfPaymentId == 1) {
@@ -759,7 +756,7 @@ class ShippingController extends Controller
 
         return [
             'shipperId' => $this->ehApiShipperId,
-            'provider' => ['id' => $this->ehApiProviderId],
+            'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
             'receiver' => $receiver,
             'item' => $item,
             'description' => 'Shipment of goods.',
@@ -800,10 +797,6 @@ class ShippingController extends Controller
     private function getProviderId(int $shippingProfileId)
     {
         $map = $this->providerProfileMap;
-        $this->getLogger(__METHOD__)->error(
-            "DodajPaczke::logging.exception",
-            ['map' => $map, 'shippingProfileId' => $shippingProfileId]
-        );
 
         foreach ($map as $providerId => $profileId) {
             if ((int) $profileId === $shippingProfileId) {
