@@ -142,6 +142,7 @@ class ShippingController extends Controller
                 foreach ($packages as $package) {
                     /* @var $package OrderShippingPackage */
                     $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
+                    $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $requestData);
                     $requestHandler = $this->handleCreateRequest($requestData);
                     if ($requestHandler['success']) {
                         $shipmentItems[] = $this->handleAfterRegisterShipment(
@@ -547,9 +548,11 @@ class ShippingController extends Controller
         $response = curl_exec($ch);
         $statusCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);
+        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.exception", $response);
         if ($response !== false) {
             $response = json_decode($response, true);
         }
+
         if (is_array($response) === false || isset($response['data']['shipments']) === false) {
             return [
                 'success' => false,
