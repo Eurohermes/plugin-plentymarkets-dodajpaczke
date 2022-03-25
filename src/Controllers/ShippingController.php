@@ -117,6 +117,7 @@ class ShippingController extends Controller
 
         $this->shippingInformationRepositoryContract = $shippingInformationRepositoryContract;
         $this->shippingPackageTypeRepositoryContract = $shippingPackageTypeRepositoryContract;
+        $this->shippingProfileRepositoryContract = $shippingProfileRepositoryContract;
 
         $this->config = $config;
 
