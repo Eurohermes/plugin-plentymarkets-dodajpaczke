@@ -119,7 +119,7 @@ class ShippingController extends Controller
         $this->ehApiLogin = $config->get('DodajPaczke.global.ehApiLogin');
         $this->ehApiPassword = $config->get('DodajPaczke.global.ehApiPassword');
         $this->ehApiShipperId = $config->get('DodajPaczke.global.ehApiShipperId');
-        $this->providerProfileMap = $config->get('DodajPaczke.global.ehApiProviderProfileMap');
+        $this->providerProfileMap = $config->get('DodajPaczke.profiles.ehApiProviderProfileMap');
     }
 
     /**
