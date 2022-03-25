@@ -27,136 +27,139 @@
           "type": "inputNumber",
           "label": "Config.ehApiShipperId",
           "required": true
-        },
-        "global.ehApiProviderId": {
-          "type": "selectBox",
-          "label": "Config.ehApiProviderId",
-          "required": true,
+        }
+      }
+    },
+    "profiles": {
+      "label": "Config.profiles",
+      "fullWidth": true,
+      "formFields": {
+        "profiles.ehApiProviderProfileMap": {
+          "type": "verticalContainer",
+          "label": "Config.providerProfileMap",
           "options": {
-            "tooltip": "Config.additionalSettingsMoreFulfillmentClientTooltip",
-            "defaultValue": "1",
-            "selectBoxValues": [
-              {
-                "value": "1",
-                "caption": "Config.dhl"
+            "containerEntries": {
+              "profiles.ehApiProviderProfileMap.1": {
+                "type": "inputNumber",
+                "label": "Config.dhl"
               },
-              {
-                "value": "2",
-                "caption": "Config.rm24t"
+              "profiles.ehApiProviderProfileMap.2": {
+                "type": "inputNumber",
+                "label": "Config.rm24t"
               },
-              {
-                "value": "3",
-                "caption": "Config.rm48tns"
+              "profiles.ehApiProviderProfileMap.3": {
+                "type": "inputNumber",
+                "label": "Config.rm48tns"
               },
-              {
-                "value": "4",
-                "caption": "Config.rm24"
+              "profiles.ehApiProviderProfileMap.4": {
+                "type": "inputNumber",
+                "label": "Config.rm24"
               },
-              {
-                "value": "5",
-                "caption": "Config.rm48"
+              "profiles.ehApiProviderProfileMap.5": {
+                "type": "inputNumber",
+                "label": "Config.rm48"
               },
-              {
-                "value": "6",
-                "caption": "Config.b2ce"
+              "profiles.ehApiProviderProfileMap.6": {
+                "type": "inputNumber",
+                "label": "Config.b2ce"
               },
-              {
-                "value": "7",
-                "caption": "Config.colissimo"
+              "profiles.ehApiProviderProfileMap.7": {
+                "type": "inputNumber",
+                "label": "Config.colissimo"
               },
-              {
-                "value": "8",
-                "caption": "Config.colissimoS"
+              "profiles.ehApiProviderProfileMap.8": {
+                "type": "inputNumber",
+                "label": "Config.colissimoS"
               },
-              {
-                "value": "9",
-                "caption": "Config.colissimoCP"
+              "profiles.ehApiProviderProfileMap.9": {
+                "type": "inputNumber",
+                "label": "Config.colissimoCP"
               },
-              {
-                "value": "11",
-                "caption": "Config.b2cfml"
+              "profiles.ehApiProviderProfileMap.11": {
+                "type": "inputNumber",
+                "label": "Config.b2cfml"
               },
-              {
-                "value": "12",
-                "caption": "Config.packetaHome"
+              "profiles.ehApiProviderProfileMap.12": {
+                "type": "inputNumber",
+                "label": "Config.packetaHome"
               },
-              {
-                "value": "13",
-                "caption": "Config.packetaPudo"
+              "profiles.ehApiProviderProfileMap.13": {
+                "type": "inputNumber",
+                "label": "Config.packetaPudo"
               },
-              {
-                "value": "14",
-                "caption": "Config.glspl"
+              "profiles.ehApiProviderProfileMap.14": {
+                "type": "inputNumber",
+                "label": "Config.glspl"
               },
-              {
-                "value": "15",
-                "caption": "Config.glsde"
+              "profiles.ehApiProviderProfileMap.15": {
+                "type": "inputNumber",
+                "label": "Config.glsde"
               },
-              {
-                "value": "16",
-                "caption": "Config.rm48ts"
+              "profiles.ehApiProviderProfileMap.16": {
+                "type": "inputNumber",
+                "label": "Config.rm48ts"
               },
-              {
-                "value": "17",
-                "caption": "Config.upsStandard"
+              "profiles.ehApiProviderProfileMap.17": {
+                "type": "inputNumber",
+                "label": "Config.upsStandard"
               },
-              {
-                "value": "18",
-                "caption": "Config.dpdClassic"
+              "profiles.ehApiProviderProfileMap.18": {
+                "type": "inputNumber",
+                "label": "Config.dpdClassic"
               },
-              {
-                "value": "19",
-                "caption": "Config.dhlStandard"
+              "profiles.ehApiProviderProfileMap.19": {
+                "type": "inputNumber",
+                "label": "Config.dhlStandard"
               },
-              {
-                "value": "20",
-                "caption": "Config.rm24u_v2"
+              "profiles.ehApiProviderProfileMap.20": {
+                "type": "inputNumber",
+                "label": "Config.rm24u_v2"
               },
-              {
-                "value": "21",
-                "caption": "Config.rm24tns_v2"
+              "profiles.ehApiProviderProfileMap.21": {
+                "type": "inputNumber",
+                "label": "Config.rm24tns_v2"
               },
-              {
-                "value": "22",
-                "caption": "Config.rm48u_v2"
+              "profiles.ehApiProviderProfileMap.22": {
+                "type": "inputNumber",
+                "label": "Config.rm48u_v2"
               },
-              {
-                "value": "23",
-                "caption": "Config.rm48tsn_v2"
+              "profiles.ehApiProviderProfileMap.23": {
+                "type": "inputNumber",
+                "label": "Config.rm48tsn_v2"
               },
-              {
-                "value": "24",
-                "caption": "Config.rm48ts_v2"
+              "profiles.ehApiProviderProfileMap.24": {
+                "type": "inputNumber",
+                "label": "Config.rm48ts_v2"
               },
-              {
-                "value": "25",
-                "caption": "Config.dp"
+              "profiles.ehApiProviderProfileMap.25": {
+                "type": "inputNumber",
+                "label": "Config.dp"
               },
-              {
-                "value": "26",
-                "caption": "Config.rm24ts_v2"
+              "profiles.ehApiProviderProfileMap.26": {
+                "type": "inputNumber",
+                "label": "Config.rm24ts_v2"
               },
-              {
-                "value": "27",
-                "caption": "Config.dhl_v2"
+              "profiles.ehApiProviderProfileMap.27": {
+                "type": "inputNumber",
+                "label": "Config.dhl_v2"
               },
-              {
-                "value": "28",
-                "caption": "Config.fedexT"
+              "profiles.ehApiProviderProfileMap.28": {
+                "type": "inputNumber",
+                "label": "Config.fedexT"
               },
-              {
-                "value": "29",
-                "caption": "Config.fedexP"
+              "profiles.ehApiProviderProfileMap.29": {
+                "type": "inputNumber",
+                "label": "Config.fedexP"
               },
-              {
-                "value": "30",
-                "caption": "Config.fedexU"
+              "profiles.ehApiProviderProfileMap.30": {
+                "type": "inputNumber",
+                "label": "Config.fedexU"
               },
-              {
-                "value": "31",
-                "caption": "Config.fedexE"
+              "profiles.ehApiProviderProfileMap.31": {
+                "type": "inputNumber",
+                "label": "Config.fedexE"
               }
-            ]
+            }
           }
         }
       }

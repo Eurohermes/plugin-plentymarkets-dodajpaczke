@@ -79,6 +79,7 @@ class ShippingController extends Controller
     private $ehApiPassword;
     private $ehApiShipperId;
     private $ehApiProviderId;
+    private $providerProfileMap;
 
     /**
      * ShipmentController constructor.
@@ -118,7 +119,7 @@ class ShippingController extends Controller
         $this->ehApiLogin = $config->get('DodajPaczke.global.ehApiLogin');
         $this->ehApiPassword = $config->get('DodajPaczke.global.ehApiPassword');
         $this->ehApiShipperId = $config->get('DodajPaczke.global.ehApiShipperId');
-        $this->ehApiProviderId = $config->get('DodajPaczke.global.ehApiProviderId');
+        $this->providerProfileMap = $config->get('DodajPaczke.profiles.ehApiProviderProfileMap');
     }
 
     /**
@@ -137,30 +138,38 @@ class ShippingController extends Controller
             $order = $this->orderRepository->findOrderById($orderId);
             $packages = $this->orderShippingPackage->listOrderShippingPackages($order->id);
             $shipmentItems = [];
-            foreach ($packages as $package) {
-                /* @var $package OrderShippingPackage */
-                $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
-                $requestHandler = $this->handleCreateRequest($requestData);
-                if ($requestHandler['success']) {
-                    $shipmentItems[] = $this->handleAfterRegisterShipment(
-                        $requestHandler['labelUrl'] ?? '',
-                        $requestHandler['shipmentNumber'] ?? '',
-                        (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
-                        $package->id
-                    );
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        true,
-                        $this->getStatusMessage($requestHandler),
-                        false,
-                        $shipmentItems
-                    );
-                    $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
-                } else {
-                    $this->createOrderResult[$orderId] = $this->buildResultArray(
-                        false,
-                        $this->getStatusMessage($requestHandler)
-                    );
+            if ($this->getProviderId($order->shippingProfileId) !== null) {
+                foreach ($packages as $package) {
+                    /* @var $package OrderShippingPackage */
+                    $requestData = $this->buildCreateRequestData($order, $this->getPackageItemDetails($package));
+                    $requestHandler = $this->handleCreateRequest($requestData);
+                    if ($requestHandler['success']) {
+                        $shipmentItems[] = $this->handleAfterRegisterShipment(
+                            $requestHandler['labelUrl'] ?? '',
+                            $requestHandler['shipmentNumber'] ?? '',
+                            (int) $requestHandler['dodajpaczkeShipmentId'] ?? 0,
+                            $package->id
+                        );
+                        $this->createOrderResult[$orderId] = $this->buildResultArray(
+                            true,
+                            $this->getStatusMessage($requestHandler),
+                            false,
+                            $shipmentItems
+                        );
+                        $this->saveShippingInformation($orderId, $shipmentDate, $shipmentItems);
+                    } else {
+                        $this->createOrderResult[$orderId] = $this->buildResultArray(
+                            false,
+                            $this->getStatusMessage($requestHandler)
+                        );
+                    }
                 }
+            } else {
+                $this->createOrderResult[$orderId] = $this->buildResultArray(
+                    false,
+                    "We could not find courier associated with order shipping profile ID" .
+                    "($order->shippingProfileId). Please check plugin's Shipping profiles configuration."
+                );
             }
         }
 
@@ -541,6 +550,7 @@ class ShippingController extends Controller
         if ($response !== false) {
             $response = json_decode($response, true);
         }
+
         if (is_array($response) === false || isset($response['data']['shipments']) === false) {
             return [
                 'success' => false,
@@ -727,11 +737,12 @@ class ShippingController extends Controller
         /* @var $deliveryAddress Address */
         $deliveryAddress = $order->deliveryAddress;
         $receiver = $this->createReceiverData($deliveryAddress);
+
         /* [mr] COD by default is 1 or '1'. */
         if ($order->methodOfPaymentId == 1) {
             return [
                 'shipperId' => $this->ehApiShipperId,
-                'provider' => ['id' => $this->ehApiProviderId],
+                'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
                 'receiver' => $receiver,
                 'item' => $item,
                 'description' => 'Shipment of goods.',
@@ -744,7 +755,7 @@ class ShippingController extends Controller
 
         return [
             'shipperId' => $this->ehApiShipperId,
-            'provider' => ['id' => $this->ehApiProviderId],
+            'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
             'receiver' => $receiver,
             'item' => $item,
             'description' => 'Shipment of goods.',
@@ -776,5 +787,22 @@ class ShippingController extends Controller
                 'contactPerson' => $address->contactPerson
             ]
         ];
+    }
+
+    /**
+     * @param int $shippingProfileId
+     * @return int|null
+     */
+    private function getProviderId(int $shippingProfileId)
+    {
+        $map = $this->providerProfileMap;
+
+        foreach ($map as $providerId => $profileId) {
+            if ((int) $profileId === $shippingProfileId) {
+                return (int)$providerId;
+            }
+        }
+
+        return null;
     }
 }
