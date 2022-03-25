@@ -27,7 +27,7 @@
           "type": "inputNumber",
           "label": "Config.ehApiShipperId",
           "required": true
-        },
+        }
       }
     },
     "profiles": {
