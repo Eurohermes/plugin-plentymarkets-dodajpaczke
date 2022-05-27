@@ -780,20 +780,21 @@ class ShippingController extends Controller
                 'isPackstation' => $address->isPackstation,
                 'packstationNo' => $address->packstationNo,
                 'contactPerson' => $address->contactPerson,
+                'postindent' => $address->postident
             ]);
 
         return [
-            'type' => strlen($address->companyName) ? 'company' : 'person',
-            'firstname' => $address->firstName,
-            'lastname' => $address->lastName,
-            'companyName' => $address->companyName,
+            'type' => 'company',
+            'companyName' => "$address->firstName $address->lastName" .
+                ($address->isPackstation && strlen($address->companyName) ? " $address->companyName" : ''),
+            'additionalCompanyName' => $address->isPackstation
+                ? $address->postident
+                : $address->companyName,
             'identityAddress' => [
-                'streetName' => $address->street,
-                'streetNumber' => $address->houseNumber . (
-                    strlen($address->additional)
-                        ? " $address->additional"
-                        : ''
-                    ),
+                'streetName' => $address->isPackstation ? 'PACKSTATION' : $address->street,
+                'streetNumber' => $address->isPackstation
+                    ? $address->packstationNo
+                    : $address->houseNumber . (strlen($address->additional) ? " $address->additional" : ''),
                 'city' => $address->town,
                 'zipNumber' => $address->postalCode,
                 'originCountryISOCode' => $address->country->isoCode2
