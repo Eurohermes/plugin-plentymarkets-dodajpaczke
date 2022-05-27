@@ -766,7 +766,11 @@ class ShippingController extends Controller
     {
         $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $address);
         $this->getLogger(__METHOD__)
-            ->error("DodajPaczke::logging.warning", ['isPackstation' => $address->isPackstation]);
+            ->error("DodajPaczke::logging.warning", [
+                'isPackstation' => $address->isPackstation,
+                'packstationNo' => $address->packstationNo,
+                'contactPerson' => $address->contactPerson,
+            ]);
 
         return [
             'type' => strlen($address->companyName) ? 'company' : 'person',
