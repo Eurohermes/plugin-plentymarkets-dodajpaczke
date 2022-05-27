@@ -774,15 +774,6 @@ class ShippingController extends Controller
 
     private function createReceiverData(Address $address): array
     {
-        $this->getLogger(__METHOD__)->error("DodajPaczke::logging.warning", $address);
-        $this->getLogger(__METHOD__)
-            ->error("DodajPaczke::logging.warning", [
-                'isPackstation' => $address->isPackstation,
-                'packstationNo' => $address->packstationNo,
-                'contactPerson' => $address->contactPerson,
-                'postindent' => $address->postident
-            ]);
-
         return [
             'type' => 'company',
             'companyName' => "$address->firstName $address->lastName" .
