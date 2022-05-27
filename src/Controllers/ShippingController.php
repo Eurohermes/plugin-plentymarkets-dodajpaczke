@@ -753,16 +753,6 @@ class ShippingController extends Controller
             ];
         }
 
-        $this->getLogger(__METHOD__)
-            ->error("DodajPaczke::logging.warning",  [
-                'shipperId' => $this->ehApiShipperId,
-                'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
-                'receiver' => $receiver,
-                'item' => $item,
-                'description' => 'Shipment of goods.',
-            ]);
-
-
         return [
             'shipperId' => $this->ehApiShipperId,
             'provider' => ['id' => $this->getProviderId($order->shippingProfileId)],
